@@ -57,7 +57,7 @@ public class UaaWebSecurityConfiguration extends WebSecurityConfigurerAdapter im
             .antMatchers("/app/**/*.{js,html}")
             .antMatchers("/i18n/**")
             .antMatchers("/content/**")
-            .antMatchers("/swagger-ui/index.html")
+//            .antMatchers("/swagger-ui/index.html")
             .antMatchers("/test/**")
             .antMatchers("/h2-console/**");
     }

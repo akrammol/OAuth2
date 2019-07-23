@@ -136,19 +136,22 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        String encryptedPassword = passwordEncoder.encode("1234");
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
-        if (userDTO.getAuthorities() != null) {
-            Set<Authority> authorities = userDTO.getAuthorities().stream()
-                .map(authorityRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
+        Set<Authority> authorities = new HashSet<>();
+        authorities.addAll(authorityRepository.findAll());
+
+//        if (userDTO.getAuthorities() != null) {
+//            Set<Authority> authorities = userDTO.getAuthorities().stream()
+//                .map(authorityRepository::findById)
+//                .filter(Optional::isPresent)
+//                .map(Optional::get)
+//                .collect(Collectors.toSet());
             user.setAuthorities(authorities);
-        }
+//        }
         userRepository.save(user);
         log.debug("Created Information for User: {}", user);
         return user;

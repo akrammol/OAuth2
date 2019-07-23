@@ -83,17 +83,19 @@ public class UaaConfiguration extends AuthorizationServerConfigurerAdapter imple
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
-                .antMatchers("/api/register").permitAll()
-                .antMatchers("/api/activate").permitAll()
-                .antMatchers("/api/authenticate").permitAll()
-                .antMatchers("/api/account/reset-password/init").permitAll()
-                .antMatchers("/api/account/reset-password/finish").permitAll()
-                .antMatchers("/api/**").authenticated()
-                .antMatchers("/management/health").permitAll()
-                .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                .antMatchers("/v2/api-docs/**").permitAll()
-                .antMatchers("/swagger-resources/configuration/ui").permitAll()
-                .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN);
+//                .antMatchers("/api/register").permitAll()
+//                .antMatchers("/api/activate").permitAll()
+//                .antMatchers("/api/authenticate").permitAll()
+//                .antMatchers("/api/account/reset-password/init").permitAll()
+//                .antMatchers("/api/account/reset-password/finish").permitAll()
+//                .antMatchers("/api/**").authenticated()
+//                .antMatchers("/management/health").permitAll()
+//                .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+//                .antMatchers("/v2/api-docs/**").permitAll()
+//                .antMatchers("/swagger-resources/configuration/ui").permitAll()
+//                .antMatchers("/swagger-ui/index.html").permitAll()
+//            .antMatchers("/api/**").permitAll()
+            .antMatchers("/**").permitAll();
         }
 
         @Override
@@ -123,7 +125,8 @@ public class UaaConfiguration extends AuthorizationServerConfigurerAdapter imple
         /*
         For a better client design, this should be done by a ClientDetailsService (similar to UserDetailsService).
          */
-        clients.inMemory()
+        clients.
+            inMemory()
             .withClient(uaaProperties.getWebClientConfiguration().getClientId())
             .secret(passwordEncoder.encode(uaaProperties.getWebClientConfiguration().getSecret()))
             .scopes("openid")
@@ -132,12 +135,12 @@ public class UaaConfiguration extends AuthorizationServerConfigurerAdapter imple
             .accessTokenValiditySeconds(accessTokenValidity)
             .refreshTokenValiditySeconds(refreshTokenValidity)
             .and()
-            .withClient(jHipsterProperties.getSecurity().getClientAuthorization().getClientId())
-            .secret(passwordEncoder.encode(jHipsterProperties.getSecurity().getClientAuthorization().getClientSecret()))
+            .withClient("client")
+            .secret(passwordEncoder.encode("123456"))
             .scopes("web-app")
             .authorities("ROLE_ADMIN")
             .autoApprove(true)
-            .authorizedGrantTypes("client_credentials")
+            .authorizedGrantTypes("client_credentials","password","refresh_token")
             .accessTokenValiditySeconds((int) jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSeconds())
             .refreshTokenValiditySeconds((int) jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSecondsForRememberMe());
     }
